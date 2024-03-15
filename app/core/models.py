@@ -15,3 +15,11 @@ class Artist(models.Model):
                 name="unique_name",
             ),
         ]
+
+
+class Track(models.Model):
+    name = models.CharField(max_length=255)
+    artists = models.ManyToManyField(Artist)
+
+    def __str__(self):
+        return self.name
