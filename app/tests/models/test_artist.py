@@ -1,21 +1,22 @@
+import pytest
 from django.db import IntegrityError
-from django.test import TestCase
 
 from core.models import Artist
 
+pytestmark = pytest.mark.django_db
 
-class ArtistTestCase(TestCase):
 
-    def test_name_is_unique(self):
+def test_name_is_unique():
+    Artist.objects.create(name="test")
+
+    with pytest.raises(IntegrityError):
         Artist.objects.create(name="test")
+        assert Artist.objects.count() == 1
 
-        with self.assertRaises(IntegrityError):
-            Artist.objects.create(name="test")
-            self.assertEqual(Artist.objects.count(), 1)
 
-    def test_name_is_unique_upper_case(self):
-        Artist.objects.create(name="test")
+def test_name_is_unique_upper_case():
+    Artist.objects.create(name="test")
 
-        with self.assertRaises(IntegrityError):
-            Artist.objects.create(name="TEST")
-            self.assertEqual(Artist.objects.count(), 1)
+    with pytest.raises(IntegrityError):
+        Artist.objects.create(name="TEST")
+        assert Artist.objects.count() == 1
